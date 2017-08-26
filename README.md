@@ -17,3 +17,18 @@
 ## 安裝
 
 待補
+
+
+## 開發
+
+```sh
+# 這邊是用 yarn，npm 也適用
+
+# install packages
+yarn install
+
+# build
+yarn run build
+
+# output: build/ folder
+```

@@ -1,0 +1,28 @@
+{
+  "name": "i-hear-you-twitch",
+  "version": "1.0.0",
+  "description": "New chat message sound for Twitch",
+  "main": "background.js",
+  "scripts": {
+    "build": "gulp",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pc035860/i-hear-you-twitch.git"
+  },
+  "keywords": [
+    "extension",
+    "twitch"
+  ],
+  "author": "Chih-Hsuan Fan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pc035860/i-hear-you-twitch/issues"
+  },
+  "homepage": "https://github.com/pc035860/i-hear-you-twitch#readme",
+  "devDependencies": {
+    "del": "^3.0.0",
+    "gulp": "^3.9.1"
+  }
+}
