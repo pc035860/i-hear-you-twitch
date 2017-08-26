@@ -7,12 +7,12 @@ gulp.task('clean', function () {
 
 gulp.task('copy', ['clean'], function () {
   return gulp.src([
-    'background.js',
-    'contentscript.js',
-    'manifest.json',
-    'new_message.mp3',
-    'images/*.png'
-  ], { base: './' })
+    'src/background.js',
+    'src/contentscript.js',
+    'src/manifest.json',
+    'src/new_message.mp3',
+    'src/images/*.png'
+  ], { base: './src' })
   .pipe(gulp.dest('build'));
 });
 
