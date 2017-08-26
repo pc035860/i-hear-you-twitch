@@ -29,9 +29,11 @@ const Sound = {
   },
 
   _createAudio() {
-    return new Audio(
+    const audio = new Audio(
       chrome.runtime.getURL('new_message.mp3')
     );
+    audio.volume = 0.5;
+    return audio;
   },
 
   _getAvailableAudio() {
