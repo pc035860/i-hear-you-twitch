@@ -16,7 +16,10 @@
 
 ## 安裝
 
-待補
+Chrome Web Store
+https://chrome.google.com/webstore/detail/i-hear-you-twitch/jnehnjnapcmmblhkcplcffhkaikgfjfg
+
+Firefox Add-ons (審核中)
 
 
 ## 開發
