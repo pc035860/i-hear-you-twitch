@@ -1,7 +1,13 @@
 const globals = {
   observer: null,
   target: null,
+  ver: null,
   currentHref: null
+};
+
+const VER = {
+  CLASSIC: 'ver classic',
+  V2018: 'ver 2018'
 };
 
 // Sound service with audio pool
@@ -24,14 +30,12 @@ const Sound = {
 
   _growPool(count) {
     for (let i = 0; i < count; i++) {
-      this._audioPool.push(this._createAudio())
+      this._audioPool.push(this._createAudio());
     }
   },
 
   _createAudio() {
-    const audio = new Audio(
-      chrome.runtime.getURL('new_message.mp3')
-    );
+    const audio = new Audio(chrome.runtime.getURL('new_message.mp3'));
     audio.volume = 0.5;
     return audio;
   },
@@ -62,7 +66,7 @@ const Sound = {
 
 // requestInterval
 // ref: https://github.com/nk-components/request-interval
-const requestInterval = (function () {
+const requestInterval = (function() {
   function interval(delay, fn) {
     var start = Date.now();
     var data = {};
@@ -89,15 +93,40 @@ const requestInterval = (function () {
   return self;
 })();
 
+function _getChatRoomContent() {
+  let content = null;
+  let ver = null;
+
+  // classic
+  content = document.querySelector('.chat-room .tse-content');
+  if (content) {
+    ver = VER.CLASSIC;
+    return { content, ver };
+  }
+
+  // 2018 react
+  content = document.querySelector('.chat-list__lines .tw-full-height');
+  if (content) {
+    ver = VER.V2018;
+    return { content, ver };
+  }
+
+  return { content, ver };
+}
+
 function getChatRoomContentAsync(timeout) {
   const delay = 100;
   const startedAt = now();
   return new Promise((resolve, reject) => {
     const interval = setInterval(() => {
-      const tseContent = document.querySelector('.chat-room .tse-content');
-      if (tseContent) {
+      const { content, ver } = _getChatRoomContent();
+
+      if (content) {
         clearInterval(interval);
-        resolve(tseContent);
+        resolve({
+          content,
+          ver
+        });
       }
 
       const timePassed = now() - startedAt;
@@ -114,7 +143,7 @@ function slice(arraryLikeGuy) {
 }
 
 function now() {
-  return +(new Date());
+  return +new Date();
 }
 
 function main() {
@@ -135,25 +164,28 @@ function main() {
     globals.observer = null;
     globals.target = null;
 
-    requestAnimationFrame(function () {
+    requestAnimationFrame(function() {
       onPageRender();
     });
   }
 
   function onPageRender() {
-    getChatRoomContentAsync(10000)
-    .then(tseContent => {
-      Sound.init();
+    getChatRoomContentAsync(10000).then(
+      ({ content, ver }) => {
+        Sound.init();
 
-      globals.observer = new MutationObserver(onMutation);
-      globals.target = tseContent;
-    }, () => {
-      console.warn('[I Hear You] Chatroom DOM not found on this page');
-    });
+        globals.observer = new MutationObserver(onMutation);
+        globals.target = content;
+        globals.ver = ver;
+      },
+      () => {
+        console.warn('[I Hear You] Chatroom DOM not found on this page');
+      }
+    );
   }
 
   function onMutation(mutations) {
-    const m = mutations.filter((mutation) => {
+    const m = mutations.filter(mutation => {
       if (!mutation.addedNodes || mutation.addedNodes.length === 0) {
         return false;
       }
@@ -166,16 +198,32 @@ function main() {
 
       const classList = slice(newNode.classList);
 
-      // 確定是聊天訊息
-      if (classList.indexOf('chat-line') < 0) {
-        return false;
+      const ver = globals.ver;
+
+      if (ver === VER.CLASSIC) {
+        // 確定是聊天訊息的一種
+        if (classList.indexOf('chat-line') < 0) {
+          return false;
+        }
+        // 不是系統訊息
+        if (classList.indexOf('admin') >= 0) {
+          return false;
+        }
+
+        return true;
       }
-      // 不是系統訊息
-      if (classList.indexOf('admin') >= 0) {
+
+      if (ver === VER.V2018) {
+        // 是聊天訊息(不會是別的)
+        // 新版用 BEM CSS 分得比較開
+        if (classList.indexOf('chat-line__message') >= 0) {
+          return true;
+        }
+
         return false;
       }
 
-      return true;
+      return false;
     });
 
     if (m.length > 0) {
@@ -188,7 +236,9 @@ function main() {
       return false;
     }
     globals.observer.observe(globals.target, {
-      attributes: true, childList: true, characterData: true,
+      attributes: true,
+      childList: true,
+      characterData: true,
       subtree: true
     });
     return true;
@@ -207,16 +257,14 @@ function main() {
       case 'activate':
         if (activate()) {
           sendResponse(true /* active */);
-        }
-        else {
+        } else {
           sendResponse(false /* active */);
         }
         break;
       case 'deactivate':
         if (deactivate()) {
           sendResponse(false /* active */);
-        }
-        else {
+        } else {
           sendResponse(true /* active */);
         }
         break;
