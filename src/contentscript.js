@@ -8,7 +8,8 @@ const globals = {
 const VER = {
   CLASSIC: 'ver classic',
   V2018: 'ver 2018',
-  V2019: 'ver 2019'
+  V2019: 'ver 2019',
+  MIXER: 'mixer 2019',
 };
 
 // Sound service with audio pool
@@ -116,6 +117,13 @@ function _getChatRoomContent() {
   content = document.querySelector('.chat-list__lines .chat-list__list-container');
   if (content) {
     ver = VER.V2019;
+    return { content, ver };
+  }
+
+  // mixer 2019
+  content = document.querySelector('.chat-container [class^=scrollWrapper]');
+  if (content) {
+    ver = VER.MIXER;
     return { content, ver };
   }
 
@@ -228,6 +236,15 @@ function main() {
           return true;
         }
 
+        return false;
+      }
+
+      if (ver === VER.MIXER) {
+        // 是聊天訊息(不會是別的)
+        // 因為有用 scope CSS，無法保證 message__ 後面的內容
+        if (classList.join(' ').indexOf('message__') >= 0) {
+          return true;
+        }
         return false;
       }
 

@@ -17,7 +17,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["*://*.twitch.tv/*"],
+      "matches": ["*://*.twitch.tv/*", "*://*.mixer.com/*"],
       "js": ["contentscript.js"],
       "run_at": "document_idle"
     }
