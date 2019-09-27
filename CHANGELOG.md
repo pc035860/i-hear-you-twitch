@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.2.1] = 2019-09-28
+### Added
+- 加入 Mixer 基本支援
+
 ## [1.2.0] - 2019-09-28
 ### Added
 - 支援新版 Twitch 網站 (2019 新 logo 版本)
