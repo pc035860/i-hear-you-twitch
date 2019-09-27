@@ -7,7 +7,8 @@ const globals = {
 
 const VER = {
   CLASSIC: 'ver classic',
-  V2018: 'ver 2018'
+  V2018: 'ver 2018',
+  V2019: 'ver 2019'
 };
 
 // Sound service with audio pool
@@ -108,6 +109,13 @@ function _getChatRoomContent() {
   content = document.querySelector('.chat-list__lines .tw-full-height');
   if (content) {
     ver = VER.V2018;
+    return { content, ver };
+  }
+
+  // 2019 new design
+  content = document.querySelector('.chat-list__lines .chat-list__list-container');
+  if (content) {
+    ver = VER.V2019;
     return { content, ver };
   }
 
@@ -213,7 +221,7 @@ function main() {
         return true;
       }
 
-      if (ver === VER.V2018) {
+      if (ver === VER.V2018 || ver === VER.V2019) {
         // 是聊天訊息(不會是別的)
         // 新版用 BEM CSS 分得比較開
         if (classList.indexOf('chat-line__message') >= 0) {
