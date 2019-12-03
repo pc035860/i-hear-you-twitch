@@ -18,5 +18,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - 支援新版 Twitch 網站 (react)
 
-## [1.0.0] - 2018-08-25
+## [1.0.0] - 2017-08-25
 - 初次 release
