@@ -2,13 +2,14 @@ const globals = {
   observer: null,
   target: null,
   ver: null,
-  currentHref: null
+  currentHref: null,
 };
 
 const VER = {
   CLASSIC: 'ver classic',
   V2018: 'ver 2018',
   V2019: 'ver 2019',
+  V2020: 'ver 2020',
   MIXER: 'mixer 2019',
 };
 
@@ -63,12 +64,12 @@ const Sound = {
     const audio = this._audioPool[0];
     audio.currentTime = 0;
     return audio;
-  }
+  },
 };
 
 // requestInterval
 // ref: https://github.com/nk-components/request-interval
-const requestInterval = (function() {
+const requestInterval = (function () {
   function interval(delay, fn) {
     var start = Date.now();
     var data = {};
@@ -114,9 +115,21 @@ function _getChatRoomContent() {
   }
 
   // 2019 new design
-  content = document.querySelector('.chat-list__lines .chat-list__list-container');
+  content = document.querySelector(
+    '.chat-list__lines .chat-list__list-container'
+  );
   if (content) {
     ver = VER.V2019;
+    return { content, ver };
+  }
+
+  // 2020 minor update
+  content =
+    document.querySelector(
+      '[data-test-selector=chat-scrollable-area__message-container]'
+    ) || document.querySelector('.chat-scrollable-area__message-container');
+  if (content) {
+    ver = VER.V2020;
     return { content, ver };
   }
 
@@ -141,7 +154,7 @@ function getChatRoomContentAsync(timeout) {
         clearInterval(interval);
         resolve({
           content,
-          ver
+          ver,
         });
       }
 
@@ -180,7 +193,7 @@ function main() {
     globals.observer = null;
     globals.target = null;
 
-    requestAnimationFrame(function() {
+    requestAnimationFrame(function () {
       onPageRender();
     });
   }
@@ -201,7 +214,7 @@ function main() {
   }
 
   function onMutation(mutations) {
-    const m = mutations.filter(mutation => {
+    const m = mutations.filter((mutation) => {
       if (!mutation.addedNodes || mutation.addedNodes.length === 0) {
         return false;
       }
@@ -239,6 +252,16 @@ function main() {
         return false;
       }
 
+      if (ver === VER.V2020) {
+        if (newNode.dataset.testSelector === 'chat-line-message') {
+          return true;
+        }
+        if (classList.indexOf('chat-line__message') >= 0) {
+          return true;
+        }
+        return false;
+      }
+
       if (ver === VER.MIXER) {
         // 是聊天訊息(不會是別的)
         // 因為有用 scope CSS，無法保證 message__ 後面的內容
@@ -264,7 +287,7 @@ function main() {
       attributes: true,
       childList: true,
       characterData: true,
-      subtree: true
+      subtree: true,
     });
     return true;
   }
