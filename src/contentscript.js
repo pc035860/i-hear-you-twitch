@@ -11,6 +11,7 @@ const VER = {
   V2019: 'ver 2019',
   V2020: 'ver 2020',
   MIXER: 'mixer 2019',
+  YOUTUBE: 'youtube 2024',
 };
 
 // Sound service with audio pool
@@ -140,6 +141,13 @@ function _getChatRoomContent() {
     return { content, ver };
   }
 
+  // youtube 2024
+  content = document.querySelector('yt-live-chat-renderer');
+  if (content) {
+    ver = VER.YOUTUBE;
+    return { content, ver };
+  }
+
   return { content, ver };
 }
 
@@ -173,6 +181,24 @@ function slice(arraryLikeGuy) {
 
 function now() {
   return +new Date();
+}
+
+// ref: https://gist.github.com/andrewchilds/30a7fb18981d413260c7a36428ed13da
+function deepGet(obj, query, defaultVal) {
+  query = Array.isArray(query)
+    ? query
+    : query
+        .replace(/(\[(\d)\])/g, '.$2')
+        .replace(/^\./, '')
+        .split('.');
+  if (!(query[0] in obj)) {
+    return defaultVal;
+  }
+  obj = obj[query[0]];
+  if (obj && query.length > 1) {
+    return deepGet(obj, query.slice(1), defaultVal);
+  }
+  return obj;
 }
 
 function main() {
@@ -271,6 +297,13 @@ function main() {
         return false;
       }
 
+      if (ver === VER.YOUTUBE) {
+        if (classList.indexOf('yt-live-chat-item-list-renderer') >= 0) {
+          return true;
+        }
+        return false;
+      }
+
       return false;
     });
 
@@ -279,7 +312,39 @@ function main() {
     }
   }
 
+  /**
+   * HyperChat extension inserts extension sand-boxed iframe into the page,
+   * there's no way to access the content of the iframe directly,
+   * hence we listen to the `messageReceive` event to get the chat messages.
+   *
+   * The `messageReceive` event is dispatched by the extension when it receives
+   * new chat messages which are originally fetched with youtube API.
+   */
+  function handleHyperChatEvent(evt) {
+    const json = evt.detail;
+
+    let data;
+    try {
+      data = JSON.parse(json);
+    } catch (e) {
+      return;
+    }
+
+    const liveChatActions = deepGet(
+      data,
+      'continuationContents.liveChatContinuation.actions',
+      []
+    );
+    const chatMessages = liveChatActions.filter(
+      (action) => action.addChatItemAction
+    );
+    if (chatMessages.length > 0) {
+      Sound.play();
+    }
+  }
+
   function activate() {
+    window.addEventListener('messageReceive', handleHyperChatEvent);
     if (!globals.observer) {
       return false;
     }
@@ -293,6 +358,7 @@ function main() {
   }
 
   function deactivate() {
+    window.removeEventListener('messageReceive', handleHyperChatEvent);
     if (!globals.observer) {
       return false;
     }
@@ -300,20 +366,21 @@ function main() {
     return true;
   }
 
-  function handleMessage(message, sender, sendResponse) {
+  function handleMessage(message, sender) {
+    const sendMessage = chrome.runtime.sendMessage;
     switch (message) {
       case 'activate':
         if (activate()) {
-          sendResponse(true /* active */);
+          sendMessage('activate:1');
         } else {
-          sendResponse(false /* active */);
+          sendMessage('activate:0');
         }
         break;
       case 'deactivate':
         if (deactivate()) {
-          sendResponse(false /* active */);
+          sendMessage('deactivate:1');
         } else {
-          sendResponse(true /* active */);
+          sendMessage('deactivate:0');
         }
         break;
     }

@@ -1,5 +1,5 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "I Hear You Twitch",
   "version": "1.2.2",
 
@@ -11,19 +11,19 @@
   },
 
   "background": {
-    "scripts": [
-      "background.js"
-    ]
+    "service_worker": "background.js",
+    "type": "module"
   },
   "content_scripts": [
     {
-      "matches": ["*://*.twitch.tv/*", "*://*.mixer.com/*"],
+      "matches": ["*://*.twitch.tv/*", "*://*.youtube.com/*"],
       "js": ["contentscript.js"],
-      "run_at": "document_idle"
+      "run_at": "document_idle",
+      "all_frames": true
     }
   ],
 
-  "browser_action": {
+  "action": {
     "default_icon": {
       "19": "images/icon-19.png",
       "38": "images/icon-38.png"
@@ -31,8 +31,17 @@
     "default_title": "I Hear You - Twitch"
   },
 
+  "permissions": [
+    "storage"
+  ],
+
   "web_accessible_resources": [
-    "new_message.mp3",
-    "images/*.png"
+    {
+      "resources": [
+        "new_message.mp3",
+        "images/*.png"
+      ],
+      "matches": ["*://*.twitch.tv/*", "*://*.youtube.com/*"]
+    }
   ]
 }

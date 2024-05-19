@@ -5,6 +5,8 @@
   "main": "background.js",
   "scripts": {
     "build": "gulp",
+    "watch": "gulp watch",
+    "tasks": "gulp watch --tasks",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -22,7 +24,11 @@
   },
   "homepage": "https://github.com/pc035860/i-hear-you-twitch#readme",
   "devDependencies": {
-    "del": "^3.0.0",
-    "gulp": "^3.9.1"
+    "del": "^7",
+    "gulp": "^5"
+  },
+  "packageManager": "yarn@4.2.2",
+  "engines": {
+    "node": "^20.0.0"
   }
 }
