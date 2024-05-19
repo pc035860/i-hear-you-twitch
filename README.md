@@ -28,8 +28,6 @@ https://addons.mozilla.org/zh-TW/firefox/addon/i-hear-you-twitch/
 ## 開發
 
 ```sh
-# 這邊是用 yarn，npm 也適用
-
 # install packages
 yarn install
 

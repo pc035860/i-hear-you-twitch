@@ -11,6 +11,7 @@ const VER = {
   V2019: 'ver 2019',
   V2020: 'ver 2020',
   MIXER: 'mixer 2019',
+  YOUTUBE: 'youtube 2024',
 };
 
 // Sound service with audio pool
@@ -137,6 +138,13 @@ function _getChatRoomContent() {
   content = document.querySelector('.chat-container [class^=scrollWrapper]');
   if (content) {
     ver = VER.MIXER;
+    return { content, ver };
+  }
+
+  // youtube 2024
+  content = document.querySelector('yt-live-chat-renderer');
+  if (content) {
+    ver = VER.YOUTUBE;
     return { content, ver };
   }
 
@@ -271,6 +279,13 @@ function main() {
         return false;
       }
 
+      if (ver === VER.YOUTUBE) {
+        if (classList.indexOf('yt-live-chat-item-list-renderer') >= 0) {
+          return true;
+        }
+        return false;
+      }
+
       return false;
     });
 
@@ -278,6 +293,7 @@ function main() {
       Sound.play();
     }
   }
+
 
   function activate() {
     if (!globals.observer) {
@@ -300,20 +316,21 @@ function main() {
     return true;
   }
 
-  function handleMessage(message, sender, sendResponse) {
+  function handleMessage(message, sender) {
+    const sendMessage = chrome.runtime.sendMessage;
     switch (message) {
       case 'activate':
         if (activate()) {
-          sendResponse(true /* active */);
+          sendMessage('activate:1');
         } else {
-          sendResponse(false /* active */);
+          sendMessage('activate:0');
         }
         break;
       case 'deactivate':
         if (deactivate()) {
-          sendResponse(false /* active */);
+          sendMessage('deactivate:1');
         } else {
-          sendResponse(true /* active */);
+          sendMessage('deactivate:0');
         }
         break;
     }
