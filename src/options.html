@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/images/favicon.png" />
+    <title>I Hear You Twitch Options</title>
+    <style>
+      body {
+        font-size: 16px;
+      }
+      @media (prefers-color-scheme: dark) {
+        body {
+          background-color: #20242e;
+          color: #a3c1cc;
+        }
+      }
+      .note {
+        margin: 20px 0;
+        padding-left: 20px;
+      }
+      .note li {
+        margin: 4px 0;
+      }
+      #sound {
+        visibility: hidden;
+        opacity: 0;
+        width: 1px;
+        height: 1px;
+      }
+      .sound-info {
+        font-weight: bold;
+        font-size: 120%;
+        margin-left: 8px;
+      }
+      .sound-btn {
+        display: inline-block;
+        margin-left: 20px;
+      }
+      .sound-wrap, .volume-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+      }
+      #volume {
+        width: 300px;
+      }
+      .volume {
+        margin-left: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Custom notification sound</h2>
+      <form name="sound-form" class="js-sound-form">
+        <p class="sound-wrap">
+          <span>Current:</span>
+          <span class="js-current-sound sound-info"></span>
+          <label for="sound" class="sound-btn">
+            <button type="button" class="js-sound-btn">Change</button>
+            <input
+              type="file"
+              id="sound"
+              name="sound"
+              class="js-sound"
+              accept="audio/mpeg,audio/wav"
+            />
+          </label>
+        </p>
+      </form>
+      <ul class="note">
+        <li>Only <code>.mp3</code> and <code>.wav</code> files are supported.</li>
+        <li>File size must be less than 2MB.</li>
+      </ul>
+      <div style="margin-top: 30px">
+        <button type="button" class="js-reset">Reset to default</button>
+      </div>
+
+      <h2 style="margin-top: 80px;">Custom volume</h2>
+      <div class="volume-wrap">
+          <input
+            type="range"
+            id="volume"
+            name="volume"
+            step="0.5"
+            min="0"
+            max="10"
+            class="js-volume"
+          />
+          <label for="volume" class="js-volume-label volume"></label>
+      </div>
+      <div style="margin-top: 30px">
+        <button type="button" class="js-volume-reset">Reset to default</button>
+      </div>
+    </div>
+    <script src="options.js" type="module"></script>
+  </body>
+</html>
