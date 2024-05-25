@@ -14,22 +14,64 @@ const VER = {
   YOUTUBE: 'youtube 2024',
 };
 
+const KEY_SOUND = 'sound';
+const KEY_VOLUME = 'volume';
+const DEFAULT_VOLUME = 0.5;
+
 // Sound service with audio pool
 const Sound = {
   _audioPool: [],
   _inited: false,
+  _audioUrl: null,
+  _volume: DEFAULT_VOLUME,
 
   init() {
     if (this._inited) {
       return;
     }
     this._inited = true;
-    this._growPool(5);
+    this.buildPool();
+    this.updateVolume();
   },
 
   play() {
     const audio = this._getAvailableAudio();
+    audio.volume = this._volume;
     audio.play();
+  },
+
+  buildPool() {
+    const self = this;
+    this._audioPool.length = 0;
+    this._getAudioURL().then((url) => {
+      self._audioUrl = url;
+      this._growPool(5);
+    });
+  },
+
+  updateVolume() {
+    const self = this;
+    this._getVolume().then((volume) => {
+      self._volume = volume;
+    });
+  },
+
+  _getAudioURL() {
+    return chrome.storage.local.get(KEY_SOUND).then((item) => {
+      if (item && item[KEY_SOUND]) {
+        return item[KEY_SOUND].dataUrl;
+      }
+      return chrome.runtime.getURL('new_message.mp3');
+    });
+  },
+
+  _getVolume() {
+    return chrome.storage.local.get(KEY_VOLUME).then((item) => {
+      if (item && item[KEY_VOLUME]) {
+        return Number(item[KEY_VOLUME]) / 10;
+      }
+      return DEFAULT_VOLUME;
+    });
   },
 
   _growPool(count) {
@@ -39,8 +81,11 @@ const Sound = {
   },
 
   _createAudio() {
-    const audio = new Audio(chrome.runtime.getURL('new_message.mp3'));
-    audio.volume = 0.5;
+    if (!this._audioUrl) {
+      throw new Error('Audio URL not set');
+    }
+
+    const audio = new Audio(this._audioUrl);
     return audio;
   },
 
@@ -387,6 +432,17 @@ function main() {
   }
 
   chrome.runtime.onMessage.addListener(handleMessage);
+
+  function handleStorageChanged(changes, areaName) {
+    if (areaName === 'local') {
+      if (KEY_SOUND in changes) {
+        Sound.buildPool();
+      } else if (KEY_VOLUME in changes) {
+        Sound.updateVolume();
+      }
+    }
+  }
+  chrome.storage.onChanged.addListener(handleStorageChanged);
 }
 
 main();

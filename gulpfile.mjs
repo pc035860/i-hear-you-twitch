@@ -14,6 +14,8 @@ function copy() {
       'src/manifest.json',
       'src/new_message.mp3',
       'src/images/*.png',
+      'src/options.html',
+      'src/options.js',
     ],
     {
       base: './src',

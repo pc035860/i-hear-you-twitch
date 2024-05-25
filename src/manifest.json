@@ -14,6 +14,10 @@
     "service_worker": "background.js",
     "type": "module"
   },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
   "content_scripts": [
     {
       "matches": ["*://*.twitch.tv/*", "*://*.youtube.com/*"],
@@ -43,5 +47,8 @@
       ],
       "matches": ["*://*.twitch.tv/*", "*://*.youtube.com/*"]
     }
-  ]
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
 }

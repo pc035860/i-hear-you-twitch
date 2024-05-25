@@ -15,7 +15,7 @@ function factory(area) {
       return chrome.storage[area].get(key).then((item) => {
         if (chrome.runtime.lastError) {
           console.debug(
-            `[yt-timetag] get ${area} storage error`,
+            `[i hear you twitch] get ${area} storage error`,
             chrome.runtime.lastError
           );
         }
@@ -38,7 +38,7 @@ function factory(area) {
       return chrome.storage[area].set(item).then(() => {
         if (chrome.runtime.lastError) {
           console.debug(
-            `[yt-timetag] set ${area} storage error`,
+            `[i hear you twitch] set ${area} storage error`,
             chrome.runtime.lastError
           );
           throw new Error(chrome.runtime.lastError);
@@ -54,7 +54,7 @@ function factory(area) {
       return chrome.storage[area].remove(keys).then(() => {
         if (chrome.runtime.lastError) {
           console.debug(
-            `[yt-timetag] remove ${area} storage error`,
+            `[i hear you twitch] remove ${area} storage error`,
             chrome.runtime.lastError
           );
         }
@@ -65,7 +65,7 @@ function factory(area) {
       return chrome.storage[area].clear().then(() => {
         if (chrome.runtime.lastError) {
           console.debug(
-            `[yt-timetag] clear ${area} storage error`,
+            `[i hear you twitch] clear ${area} storage error`,
             chrome.runtime.lastError
           );
           throw new Error(chrome.runtime.lastError);
