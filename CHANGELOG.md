@@ -6,7 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-## [1.2.2] = 2020-5-16
+## [1.3.0] = 2024-05-26
+### Added
+- 加入選項頁面，支援自訂聲音檔案及音量
+
+## [1.2.2] = 2020-05-16
 ### Added
 - 支援 Twitch 2020 小更新
 

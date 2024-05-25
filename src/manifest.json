@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "I Hear You Twitch",
-  "version": "1.2.2",
+  "version": "1.3.0",
 
   "description": "Plays a sound when new message comes in Twitch chat",
 
