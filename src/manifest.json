@@ -11,8 +11,7 @@
   },
 
   "background": {
-    "service_worker": "background.js",
-    "type": "module"
+    "page": "background.html"
   },
   "options_ui": {
     "page": "options.html",
@@ -50,5 +49,10 @@
   ],
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self'"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "i-hear-you-twich-pc035860@gmail.com"
+    }
   }
 }

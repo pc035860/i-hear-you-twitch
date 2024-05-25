@@ -9,6 +9,7 @@ function copy() {
   return src(
     [
       'src/background.js',
+      'src/background.html',
       'src/utils/*.js',
       'src/contentscript.js',
       'src/manifest.json',
