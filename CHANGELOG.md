@@ -6,8 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.3.1] - 2024-11-02
+### Added
+- 支援 Twitch 2024/10 新版網站
+
 ## [1.3.0] = 2024-05-26
 ### Added
+- 支援 YouTube
 - 加入選項頁面，支援自訂聲音檔案及音量
 
 ## [1.2.2] = 2020-05-16
