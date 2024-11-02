@@ -330,6 +330,13 @@ function main() {
         if (classList.indexOf('chat-line__message') >= 0) {
           return true;
         }
+
+        // 2024/10 sometimes message is wrapped in other elements
+        const isChild = newNode.querySelector('.chat-line__message');
+        if (isChild) {
+          return true;
+        }
+
         return false;
       }
 
